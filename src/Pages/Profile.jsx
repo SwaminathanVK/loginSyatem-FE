@@ -35,11 +35,11 @@ const Profile = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.put('/user/profiles', formData);
-      toast.success(res.data.message);
+      const res = await api.put('/user/profile', formData);
+      toast.success(res.data.message || 'Profile updated successfully');
       setEditMode(false);
     } catch (err) {
-      toast.error('Update failed');
+      toast.error(err.response?.data?.message || 'Update failed');
     }
   };
 
@@ -49,11 +49,45 @@ const Profile = () => {
         <h2 className="text-2xl font-bold mb-4 text-blue-600 text-center">My Profile</h2>
 
         <form onSubmit={handleUpdate} className="space-y-4">
-          <input type="text" name="name" value={formData.name} onChange={handleChange} disabled={!editMode} className={`w-full px-3 py-2 border rounded ${!editMode ? 'bg-gray-100' : ''}`} />
-          <input type="date" name="dateOfBirth" value={formData.dateOfBirth?.substring(0, 10)} onChange={handleChange} disabled={!editMode} className={`w-full px-3 py-2 border rounded ${!editMode ? 'bg-gray-100' : ''}`} />
-          <input type="number" name="age" value={formData.age} onChange={handleChange} disabled={!editMode} className={`w-full px-3 py-2 border rounded ${!editMode ? 'bg-gray-100' : ''}`} />
-          <input type="text" name="contactNumber" value={formData.contactNumber} onChange={handleChange} disabled={!editMode} className={`w-full px-3 py-2 border rounded ${!editMode ? 'bg-gray-100' : ''}`} />
-          <input type="email" name="email" value={formData.email} readOnly className="w-full px-3 py-2 border rounded bg-gray-100" />
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            disabled={!editMode}
+            className={`w-full px-3 py-2 border rounded ${!editMode ? 'bg-gray-100' : ''}`}
+          />
+          <input
+            type="date"
+            name="dateOfBirth"
+            value={formData.dateOfBirth?.substring(0, 10)}
+            onChange={handleChange}
+            disabled={!editMode}
+            className={`w-full px-3 py-2 border rounded ${!editMode ? 'bg-gray-100' : ''}`}
+          />
+          <input
+            type="number"
+            name="age"
+            value={formData.age}
+            onChange={handleChange}
+            disabled={!editMode}
+            className={`w-full px-3 py-2 border rounded ${!editMode ? 'bg-gray-100' : ''}`}
+          />
+          <input
+            type="text"
+            name="contactNumber"
+            value={formData.contactNumber}
+            onChange={handleChange}
+            disabled={!editMode}
+            className={`w-full px-3 py-2 border rounded ${!editMode ? 'bg-gray-100' : ''}`}
+          />
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            readOnly
+            className="w-full px-3 py-2 border rounded bg-gray-100"
+          />
 
           {!editMode ? (
             <button
