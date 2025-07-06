@@ -35,10 +35,15 @@ const Profile = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.put('/user/profiles', formData);
-      toast.success(res.data.message || 'Profile updated successfully');
-      setEditMode(false);
+        const res = await api.put('/user/profiles', formData); // ✅ corrected path
+        if (res.status === 200) {
+          toast.success(res.data.message || 'Profile updated successfully');
+          setEditMode(false);
+        } else {
+          toast.error('Something went wrong!');
+        }
     } catch (err) {
+        console.error("Update Error:", err.response?.data || err.message);
       toast.error(err.response?.data?.message || 'Update failed');
     }
   };
