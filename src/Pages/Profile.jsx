@@ -12,6 +12,7 @@ const Profile = () => {
   });
 
   const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -20,6 +21,8 @@ const Profile = () => {
         setFormData(res.data);
       } catch (err) {
         toast.error('Failed to fetch profile');
+      } finally {
+        setLoading(false);
       }
     };
     fetchProfile();
@@ -34,26 +37,35 @@ const Profile = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    console.log("🛠️ handleUpdate called"); // Debugging log
     try {
-        const res = await api.put('/user/profiles', formData); // ✅ corrected path
-        if (res.status === 200) {
-          toast.success(res.data.message || 'Profile updated successfully');
-          setEditMode(false);
-        } else {
-          toast.error('Something went wrong!');
-        }
+      const res = await api.put('/user/profiles', formData);
+      if (res.status === 200) {
+        toast.success(res.data.message || 'Profile updated successfully');
+        setEditMode(false);
+      } else {
+        toast.error('Something went wrong!');
+      }
     } catch (err) {
-        console.error("Update Error:", err.response?.data || err.message);
+      console.error("Update Error:", err.response?.data || err.message);
       toast.error(err.response?.data?.message || 'Update failed');
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <p className="text-gray-500">Loading profile...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 pt-20 flex justify-center">
       <div className="bg-white p-6 rounded shadow-md w-full max-w-lg">
         <h2 className="text-2xl font-bold mb-4 text-blue-600 text-center">My Profile</h2>
 
-        <form onSubmit={handleUpdate} className="space-y-4">
+        <form onSubmit={handleUpdate} noValidate className="space-y-4">
           <input
             type="text"
             name="name"
@@ -103,12 +115,21 @@ const Profile = () => {
               Edit Profile
             </button>
           ) : (
-            <button
-              type="submit"
-              className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
-            >
-              Save Changes
-            </button>
+            <>
+              <button
+                type="submit"
+                className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
+              >
+                Save Changes
+              </button>
+              <button
+                type="button"
+                onClick={() => setEditMode(false)}
+                className="w-full bg-gray-400 text-white py-2 rounded hover:bg-gray-500"
+              >
+                Cancel
+              </button>
+            </>
           )}
         </form>
       </div>
