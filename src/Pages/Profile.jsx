@@ -35,7 +35,7 @@ const Profile = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.put('/user/profile', formData);
+      const res = await api.put('/user/profiles', formData);
       toast.success(res.data.message || 'Profile updated successfully');
       setEditMode(false);
     } catch (err) {
